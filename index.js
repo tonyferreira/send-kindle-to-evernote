@@ -1,10 +1,11 @@
-const fs          = require('fs');
-const csv         = require('csv-parser');
-const file        = 'kindle_books_20240317.csv';
-const nodemailer  = require("nodemailer");
+var fs          = require('fs');
+var csv         = require('csv-parser');
+var nodemailer  = require("nodemailer");
+var books       = [];
+var index       = 0;
 
 
-const transporter = nodemailer.createTransport({
+var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
         user: "tferreira92879@gmail.com",
@@ -12,10 +13,8 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-var books = [];
-var index = 0;
 
-fs.createReadStream(file)
+fs.createReadStream('books.csv')
     .pipe(csv())
     .on('data', (book) => {
         books.push(book);
@@ -24,7 +23,8 @@ fs.createReadStream(file)
         sendToEvernote();
     });
 
-function sendToEvernote() {
+
+    function sendToEvernote() {
 
     if (index >= 100){
         return;
