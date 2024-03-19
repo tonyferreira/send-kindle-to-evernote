@@ -12,6 +12,7 @@
   "dependencies": {
     "csv": "^6.3.8",
     "csv-parser": "^3.0.0",
+    "evernote": "^2.0.5",
     "nodemailer": "^6.9.12"
   }
 }

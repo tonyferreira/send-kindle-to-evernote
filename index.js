@@ -1,8 +1,6 @@
 var fs          = require('fs');
 var csv         = require('csv-parser');
-var nodemailer  = require("nodemailer");
-var books       = [];
-var index       = 0;
+var nodemailer  = require('nodemailer');
 
 
 var transporter = nodemailer.createTransport({
@@ -14,6 +12,11 @@ var transporter = nodemailer.createTransport({
 });
 
 
+var books       = [];
+var index       = 251;
+var iteration   = 0;
+var iterations  = 50;
+
 fs.createReadStream('books.csv')
     .pipe(csv())
     .on('data', (book) => {
@@ -23,10 +26,11 @@ fs.createReadStream('books.csv')
         sendToEvernote();
     });
 
+function sendToEvernote() {
 
-    function sendToEvernote() {
-
-    if (index >= 100){
+    // limit the number of books processed to avoid resource limits (gmail, evernote)
+    if (iteration > iterations) {
+        console.log('done');
         return;
     }
 
@@ -34,7 +38,7 @@ fs.createReadStream('books.csv')
 
     if (book) {
 
-        console.log(book.title);
+        console.log(`[${index}] ${book.title}`);
 
         const email = {
             from: "tferreira92879@gmail.com",
@@ -45,9 +49,10 @@ fs.createReadStream('books.csv')
 
         transporter.sendMail(email, (err, info) => {
             if (err) {
-                console.error(err.message + ' at index: ' + index);
+                console.error(index + ': ' + err.message);
             } else {
                 index++;
+                iteration++;
                 sendToEvernote();
             }
         });
