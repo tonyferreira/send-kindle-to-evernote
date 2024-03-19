@@ -13,9 +13,9 @@ var transporter = nodemailer.createTransport({
 
 
 var books       = [];
-var index       = 251;
+var index       = 351;
 var iteration   = 0;
-var iterations  = 50;
+var iterations  = 87;
 
 fs.createReadStream('books.csv')
     .pipe(csv())
